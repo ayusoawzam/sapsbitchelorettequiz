@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ultimate Partner & Mum Vibe Quiz 💍</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fceade, #fbc2eb);
+            color: #4a4a4a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 { color: #d63384; margin-bottom: 10px; font-size: 26px; }
+        .progress { font-size: 14px; color: #888; font-weight: 600; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .question { font-size: 19px; font-weight: bold; margin-bottom: 20px; min-height: 60px; line-height: 1.4; color: #333; }
+        .btn {
+            display: block;
+            width: 100%;
+            background: #fff0f3;
+            color: #d63384;
+            border: 2px solid #ffccd5;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-weight: 600;
+            text-align: left;
+            box-sizing: border-box;
+        }
+        .btn:hover { background: #ffccd5; color: #b0005d; transform: translateY(-2px); }
+        .btn-start { text-align: center; background: #d63384; color: white; border: none; font-size: 18px; padding: 16px; }
+        .btn-start:hover { background: #b0005d; color: white; }
+        .btn-back {
+            background: transparent;
+            color: #888;
+            border: 1px dashed #ccc;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .btn-back:hover { background: #f8f9fa; color: #333; transform: none; }
+        .feedback-card {
+            background: #fff5f7;
+            border: 2px solid #ffccd5;
+            padding: 25px;
+            border-radius: 16px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .feedback-title { font-size: 22px; color: #d63384; font-weight: bold; margin-bottom: 12px; }
+        .feedback-body { font-size: 16px; line-height: 1.6; color: #4a4a4a; margin-bottom: 10px; }
+        .result-title { font-size: 24px; color: #d63384; font-weight: bold; margin: 20px 0 15px 0; }
+        .result-desc { font-size: 16px; line-height: 1.6; margin-bottom: 25px; text-align: left; background: #fff5f7; padding: 20px; border-radius: 12px; border-left: 5px solid #d63384; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="intro-screen">
+    <h1>What Would You Do? (Wrong Answers Only) 👩🏻‍❤️‍👨🏽</h1><p style="font-size: 16px; margin-bottom: 25px;"><b>Rules:</b> The bride has to discuss with the group. The group may convince the bride, but ultimately the bride gets to decide which is the best answer. Choose the answer that your chaotic ***** ***** selves would choose.</p>
+    <p><b>Disclaimer:</b> These are real-life cases taken from Reddit and Podcasts. For entertainment only!  May such situations never find you. </p>
+    <button class="btn btn-start" onclick="startQuiz()">Let's get messy ✨</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div class="progress" id="progress">Question 1 of 6</div>
+        <div class="question" id="question-text">Loading question...</div>
+
+        <button class="btn" id="choice0" onclick="submitAnswer(0)">Choice 1</button>
+        <button class="btn" id="choice1" onclick="submitAnswer(1)">Choice 2</button>
+        <button class="btn" id="choice2" onclick="submitAnswer(2)">Choice 3</button>
+        <button class="btn" id="choice3" onclick="submitAnswer(3)">Choice 4</button>
+        
+        <button class="btn btn-back hidden" id="back-btn" onclick="previousQuestion()">← Back to Previous Question</button>
+    </div>
+
+    <div id="feedback-screen" class="hidden">
+        <div class="progress" id="feedback-progress">Feedback 1 of 6</div>
+        
+        <div class="feedback-card">
+            <div class="feedback-title" id="feedback-title">Feedback Title</div>
+            <div class="feedback-body" id="feedback-body">Feedback description goes here.</div>
+        </div>
+
+        <button class="btn btn-start" onclick="nextQuestion()">*****... next drama I guess?→</button>
+        <button class="btn btn-back" onclick="backFromFeedback()">← Hold up, lemme read that ***** again</button>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <h1>Your Ultimate Vibe Is...</h1>
+        <div class="result-title" id="result-name">👑 The Ultimate Party Legend</div>
+        <div class="result-desc" id="result-desc">
+            No matter which path you take or which answers you clicked, one thing is 100% certain: you are going to be an absolute icon as a partner, mum, and friend! You bring the energy, the fun, and the perfect balance of love to everything you do. Cheers to the bride-to-be! 🥂🍾
+        </div>
+        <button class="btn btn-start" onclick="restartQuiz()">Pass to the Next Girl 🍾</button>
+    </div>
+</div>
+
+<script>
+    // 6 Questions with custom unique feedback for each landing page
+    const questions = [
+        {
+            q: "Your partner text-asks 'What're you cooking for dinner?'. You've told him how exhausting work is countless times but he insists that you cook for him or he starts one of his arguments: 'That's one of the ways to show me how you care as a wife.' This has been happening for the last month and every time before, you sucked up and cooked him up something so he'd stop guilt tripping you. Today, your day was especially ***** and you feel like you are at your breaking point. How do you respond?",
+            a: [
+                "Order something from Grabfood and have the person deliver it to you by hand. You hide it in your bag and pretend to take out ingredients to start cooking. A few minutes in, you heat up the Grabfood and serve it to him",
+                "Suck it up once again. Go home and cook something simple even though you are ***** exhausted as *****. You add a bit of your ***** inside the dish.",
+                "Text him back aggressively 'I've told you so many times how I'm tired. Why don't you cook for once, you lazy *****?'",
+                "Ignore his message and go out partying and drinking. ***** that ***** boi"
+            ],
+            feedbackTitle: "🍝 Dinner Strategy Noted!",
+            feedbackBody: "Whether it's gourmet cooking or emergency pizza, keeping everyone fed with zero drama is a top-tier partner skill!"
+        },
+        {
+            q: "Rate your tolerance for a sink full of dirty dishes on a Saturday morning:",
+            a: [
+                "1/5 - Immediate panic. The sink must be spotless before coffee.",
+                "5/5 - Total bliss. The dirty dishes live there now.",
+                "3/5 - I'll stack them neatly so they look aesthetically pleasing.",
+                "2/5 - I'll force us both to wash them together as a team effort."
+            ],
+            feedbackTitle: "🧼 Clean Kitchen Energy!",
+            feedbackBody: "House standards set! A clean counter brings sanity, but a sink full of dishes just proves you had a great Friday night."
+        },
+        {
+            q: "Your kids or pets just tracked mud all over your new carpet. Your immediate reaction is:",
+            a: [
+                "Execute an immediate 4-step stain removal protocol.",
+                "Take a hilarious video for Instagram and laugh hysterically.",
+                "Deep breath, light incense, and order a cute washable rug online.",
+                "Hate the rug, hug the culprit, and grab a towel together."
+            ],
+            feedbackTitle: "🐾 Crisis Management Level 100!",
+            feedbackBody: "Living spaces are meant for living! Your instinct under pressure says everything about how fun your house will be."
+        },
+        {
+            q: "What does your ultimate, realistic weekend morning look like?",
+            a: [
+                "Up at 7 AM, gym done, running errands off a color-coded checklist.",
+                "Sleeping in until noon, waking up, and deciding on vibes spur-of-the-moment.",
+                "Slow-drip coffee, ambient jazz playlist, and fresh flowers in a vase.",
+                "Big family/partner fry-up breakfast in pajamas talking about life."
+            ],
+            feedbackTitle: "☕ Morning Vibe Locked In!",
+            feedbackBody: "Weekend mornings set the tone for the whole week. Slow mornings, productive lists, or big brunches—you know how to reset!"
+        },
+        {
+            q: "Your partner comes home visibly upset after a brutal day at work. What do you do?",
+            a: [
+                "Create a step-by-step action plan to solve whatever problem happened.",
+                "Distract them immediately with a spontaneous night out on the town.",
+                "Run a warm bath, pour a drink, and set up a soothing space.",
+                "Sit on the floor together, listen to them vent, and take their side 100%."
+            ],
+            feedbackTitle: "❤️ Ultimate Support Unlocked!",
+            feedbackBody: "Having someone's back when they've had a rough day is the true test of a partner. Absolute rockstar behavior right here."
+        },
+        {
+            q: "Finally, pick your signature soul drink for a night out:",
+            a: [
+                "A perfectly balanced Espresso Martini or gin & tonic.",
+                "Tequila shots or whatever free drink is handed to me.",
+                "A crisp glass of natural orange wine or an Aperol Spritz.",
+                "An icy cold pint of beer or cider with my best friends."
+            ],
+            feedbackTitle: "🥂 The Final Toast!",
+            feedbackBody: "Drink selected! You are officially ready to see your ultimate partner/mum/wife vibe."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+
+    function startQuiz() {
+        document.getElementById('intro-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = questions[currentQuestionIndex];
+        document.getElementById('progress').innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+        document.getElementById('question-text').innerText = q.q;
+        
+        document.getElementById('choice0').innerText = q.a[0];
+        document.getElementById('choice1').innerText = q.a[1];
+        document.getElementById('choice2').innerText = q.a[2];
+        document.getElementById('choice3').innerText = q.a[3];
+
+        const backBtn = document.getElementById('back-btn');
+        if (currentQuestionIndex > 0) {
+            backBtn.classList.remove('hidden');
+        } else {
+            backBtn.classList.add('hidden');
+        }
+    }
+
+    function submitAnswer(choiceIndex) {
+        userAnswers[currentQuestionIndex] = choiceIndex;
+        const q = questions[currentQuestionIndex];
+        
+        // Populate custom feedback landing page
+        document.getElementById('feedback-progress').innerText = `Feedback ${currentQuestionIndex + 1} of ${questions.length}`;
+        document.getElementById('feedback-title').innerText = q.feedbackTitle;
+        document.getElementById('feedback-body').innerText = q.feedbackBody;
+
+        // Hide quiz screen and display feedback page
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('feedback-screen').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+        document.getElementById('feedback-screen').classList.add('hidden');
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function backFromFeedback() {
+        document.getElementById('feedback-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function previousQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            showQuestion();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('feedback-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        userAnswers = [];
+        document.getElementById('result-screen').classList.add('hidden');
+        document.getElementById('feedback-screen').classList.add('hidden');
+        document.getElementById('intro-screen').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
