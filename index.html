@@ -21,7 +21,7 @@
             padding: 30px;
             border-radius: 24px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-            max-width: 550px;
+            max-width: 900px;
             width: 100%;
             text-align: center;
         }
@@ -65,8 +65,24 @@
             text-align: center;
         }
         .feedback-title { font-size: 22px; color: #d63384; font-weight: bold; margin-bottom: 12px; }
-        .feedback-body { font-size: 16px; line-height: 1.6; color: #4a4a4a; margin-bottom: 10px; }
-        .result-title { font-size: 24px; color: #d63384; font-weight: bold; margin: 20px 0 15px 0; }
+        .feedback-body { font-size: 16px; line-height: 1.6; color: #4a4a4a; margin-bottom: 15px; }
+        .chaos-badge {
+            display: inline-block;
+            background: #d63384;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #d63384;
+            margin: 15px 0;
+        }
+        .result-title { font-size: 24px; color: #d63384; font-weight: bold; margin: 10px 0 15px 0; }
         .result-desc { font-size: 16px; line-height: 1.6; margin-bottom: 25px; text-align: left; background: #fff5f7; padding: 20px; border-radius: 12px; border-left: 5px solid #d63384; }
         .hidden { display: none; }
     </style>
@@ -75,8 +91,8 @@
 
 <div class="quiz-container">
     <div id="intro-screen">
-    <h1>What Would You Do? (Wrong Answers Only Edition) 👩🏻‍❤️‍👨🏽</h1><p style="font-size: 16px; margin-bottom: 25px;"><b>Rules:</b> The bride has to discuss with the group. The group may convince the bride, but ultimately the bride gets to decide which is the best answer. Pick the one that you feel that your most chaotic bitch ass selves would choose.</p>
-    <p><b>Disclaimer:</b> These are real-life cases taken from Reddit and Podcasts. For Entertainment only!  May such situations never find any of you 🤮</p>
+    <h1>What Would You Do? (Wrong Answers Only Edition) 👩🏻‍❤️‍👨🏽</h1><p style="font-size: 16px; margin-bottom: 25px;"><b>Rules:</b> Honestly, what rules? This game is just a bunch of baloney but let's have fun! There will be six questions. For every round, the bride has to discuss with the group on which answer to pick. The group may convince the bride, but ultimately the bride gets to decide which is the best answer. Pick the one that you feel your most chaotic bitch ass self would choose. Each question will then lead to a question for the bride to either answer or get smacked by a pillow on the butt.</p>
+    <p><b>Disclaimer:</b> These are inspired by stories taken from Reddit, Tiktok and podcasts. For entertainment only! </p>
     <button class="btn btn-start" onclick="startQuiz()">Let's get messy ✨</button>
     </div>
 
@@ -93,95 +109,108 @@
     </div>
 
     <div id="feedback-screen" class="hidden">
-        <div class="progress" id="feedback-progress">Feedback 1 of 6</div>
+        <div class="progress" id="feedback-progress">1 of 6 Drama Solved</div>
         
         <div class="feedback-card">
+            <div class="chaos-badge" id="choice-chaos">+0% Chaos Added</div>
             <div class="feedback-title" id="feedback-title">Feedback Title</div>
             <div class="feedback-body" id="feedback-body">Feedback description goes here.</div>
-        </div>
+            </div>
 
-        <button class="btn btn-start" onclick="nextQuestion()">*****... next drama I guess?→</button>
-        <button class="btn btn-back" onclick="backFromFeedback()">← Hold up, lemme read that ***** again</button>
+        <button class="btn btn-start" onclick="nextQuestion()">Moving on! →</button>
+        <button class="btn btn-back" onclick="backFromFeedback()">← Hold up, lemme read that shit again</button>
     </div>
 
     <div id="result-screen" class="hidden">
-        <h1>Your Ultimate Vibe Is...</h1>
-        <div class="result-title" id="result-name">👑 Slay Queen</div>
+        <h1>Your Total Chaos Score Is...</h1>
+        <div class="score-display" id="final-score">0%</div>
+        <div class="result-title" id="result-name">Chaos Level Title</div>
         <div class="result-desc" id="result-desc">
-            No matter which path you take or which answers you clicked, one thing is 100% certain: you are going to be an absolute icon as a partner, mum, and friend! You bring the energy, the fun, and the perfect balance of love to everything you do. Cheers to the bride-to-be! 🥂🍾
+            Description of final verdict based on total chaos level reached.
         </div>
         <button class="btn btn-start" onclick="restartQuiz()">Relive the drama 💩</button>
     </div>
 </div>
 
 <script>
-    // 6 Questions with custom unique feedback for each landing page
+    // Max raw score sum possible from choices = 100 points
+    // Final chaos score is normalized so max possible = 200%
+    const MAX_RAW_SCORE = 100;
+
     const questions = [
         {
-            q: "Your partner text-asks 'What're you cooking for dinner?'. You've told him how exhausting work is countless times but he insists that you cook for him or he starts one of his arguments: 'That's one of the ways to show me how you care as a wife.' This has been happening for the last month and every time before, you sucked up and cooked him up something so he'd stop guilt tripping you. Today, your day was especially ***** and you feel like you are at your breaking point. How do you respond?",
+            q: "Your partner text-asks 'What're you cooking for dinner?'. You know he loves your cooking but today, your day was especially shitty and you feel like you are at your breaking point. How do you respond?",
+
             a: [
-                "Order something from Grabfood and have the person deliver it to you by hand. You hide it in your bag as you reach home and greets your husband. He asks 'What's that smell? Smells good.' 'Must be the neighbours cooking.' you replied. You go into the kitchen and pretend to take out ingredients to start cooking. A few minutes in, you heat up the Grabfood and act as if you've been cooking then you serve it to him",
-                "Suck it up once again. Go home and cook something simple even though you are fucking exhausted as hell. You add a bit of your shit inside the dish.",
-                "Text him back aggressively 'I've told you so many times how I'm tired. Why don't you cook for once, you lazy fuck?'",
-                "Ignore his message and go out partying and drinking. Faq that shi boi"
+                "Order something from Grabfood and have the person deliver it to you by hand. You hide it in your bag as you reach home and greet your husband. He asks 'What's that smell? Smells good.' 'Must be the neighbours cooking...' you replied. You go into the kitchen and pretend to take out ingredients to start cooking. A few minutes in, you heat up the food from your bag and act as if you've been cooking then you serve it to him.",
+                "Suck it up once again. Go home and cook something simple even though you are exhausted as hell. You add a bit of your shit inside the dish so next time, he won't ask you to cook anymore. Nasi kangkang that shit",
+                "Text him back aggressively: 'I don't want to cook!! I don't want to cook you understand!!!! AAAAAAHHHHHH'",
+                "Ignore his message and go out partying and drinking as if you're still single. Malaaam masih muda ya aku sakit aku healing sampai pagi tak balik"
             ],
-            feedbackTitle: "Chaos Level:788 ",
-            feedbackBody: "Whether it's gourmet cooking or emergency pizza, keeping everyone fed with zero drama is a top-tier partner skill!"
+            chaosPoints: [25, 10, 18, 20], // Chaos weights for each choice
+                        feedbackTitle: "Communication is Key",
+            // Example with Paragraphs, Bold, Italics, and Underline
+            feedbackBody: "<p><video width='480' height='720' controls poster='thumbnail.jpg' align='center'><source src='https://files.catbox.moe/g3ojxm.mp4' type='video/mp4'><source src='my-video.webm' type='video/webm'></video></p><p>Which food would you want to cook for him first as a married wife? </p>"
         },
         {
-            q: "Rate your tolerance for a sink full of dirty dishes on a Saturday morning:",
+            q: "You find out that your husband's best friend, who is currently unmarried and single, has been borrowing him because his friend had recently lost his job and dealing with the loss of his own mother. When you asked your husband how much he has borrowed so far, he says about $5k in total. You were shocked to learn of this only now when you decide to open the credit card statement in your joint savings account. This makes you upset because you and him have been struggling to save up to start a family. After thinking for a while, you decide to:",
             a: [
-                "1/5 - Immediate panic. The sink must be spotless before coffee.",
-                "5/5 - Total bliss. The dirty dishes live there now.",
-                "3/5 - I'll stack them neatly so they look aesthetically pleasing.",
-                "2/5 - I'll force us both to wash them together as a team effort."
+                "Purchase some craft materials to create a costume that looks like a gigantic butthole for your husband to wear everywhere he goes that says 'I can shit out money.'",
+                "Get the number of your husband's best friend, call him up to meet secretly behind your husband. Hire a private investigator to take photos of you and him on the rendesvous to make it staged like a private affair. Mail the photos to your own husband and when your husband discovers them and gets shocked, you ask him 'So...now you know how it feels like to be betrayed.'",
+                "Buy red paint and splash it on your husband's best friend's house. You write on his door with your finger O$P$. The CCTV captures your crime and when questioned you tell them that 'Tom Riddle' made you do it.'",
+                "Create a fake account on all dating apps to connect with your your husband's best friend. You eventually get ahold of him on Grindr and organize a love scam to get back the $5k from him."
             ],
-            feedbackTitle: "🧼 Clean Kitchen Energy!",
-            feedbackBody: "House standards set! A clean counter brings sanity, but a sink full of dishes just proves you had a great Friday night."
+            chaosPoints: [12, 5, 20, 25],
+            feedbackTitle: "Your Money is Your Money, Our Money is Our Money",
+            feedbackBody: "<p><video width='480' height='720' controls poster='thumbnail.jpg' align='center'><source src='https://files.catbox.moe/g3ojxm.mp4' type='video/mp4'><source src='my-video.webm' type='video/webm'></video></p><p>Do you think that the wife should be transparent with all of her spendings with the husband in her own savings account?</p>"
         },
         {
-            q: "Your child is crying in the middle of the night for the 8th time this week. You have been the first to wake up everytime and when you do shake your partner awake he says 'Ok, in a second.' but falls back asleep immediately. You end up tending to your baby by yourself while he sleeps. Then when he wakes in the morning, he never talks about it. It's as if he doesn't remember anything each time. You decide that this was your last straw so:",
+            q: "Your child is crying in the middle of the night for the 3rd time this week. You have been the first to wake up every time and when you try to shake your partner awake he says 'Ok sayang, in a second.' but he falls back asleep immediately! His work consists of laborious tasks, so you know how tired he can get (but you're tired too 🥲). Anyway, you end up tending to your baby by yourself while letting him sleep. Then when he wakes in the morning, he never talks about it. It's as if he doesn't remember anything each time. How do you go about this situation?",
             a: [
-                "Execute an immediate 4-step stain removal protocol.",
-                "Take a hilarious video for Instagram and laugh hysterically.",
-                "Deep breath, light incense, and order a cute washable rug online.",
-                "Hate the rug, hug the culprit, and grab a towel together."
+                "Jampi-jampi the drink inside his work bottle that you helped him fill up. 'Jangan lupa minum air tau, yang. Cuaca panas hari ni'. You turn to the camera like in a sinetron 'Baru tahuin kamu siapa gue'",
+                "Hide all his pants so he doesn't have any to wear to work. Pergilah you kerja pakai seluardalam je",
+                "'Mimpi pasal siapa semalam? Tidur sampai kejut tak nak bangun. Huh? You cakap ngan I skrg you mimpi pasal apa sampai anak you melalak you tidur je.' Saja nk carik pasal buat cerita kan...",
+                "You start breeding cicak secretly and each time he doesn't wake up when your child is crying, you release a cicak inside his pants."
             ],
-            feedbackTitle: "🐾 Crisis Management Level 100!",
-            feedbackBody: "Living spaces are meant for living! Your instinct under pressure says everything about how fun your house will be."
+            chaosPoints: [15, 30, 35, 40],
+            feedbackTitle: "Parenting is a Shared Responsibility",
+            feedbackBody: "<p><video width='480' height='720' controls poster='thumbnail.jpg' align='center'><source src='https://files.catbox.moe/g3ojxm.mp4' type='video/mp4'><source src='my-video.webm' type='video/webm'></video></p><p>If you guys had kids of your own, how many would you want to have?</p>"
         },
         {
-            q: "What does your ultimate, realistic weekend morning look like?",
+            q: "At a family event, one of his annoying family members you just met started giving unsolicited marriage and pregnancy advice when she learned that you and your partner are not going to have kids immediately after marriage. Towards the end of her ramble, she says 'You dah tua dek. Cepat beranak nanti suami you carik perempuan lain', You knew that was IT and you have to come up with a way to make her stop yapping.",
             a: [
-                "Up at 7 AM, gym done, running errands off a color-coded checklist.",
-                "Sleeping in until noon, waking up, and deciding on vibes spur-of-the-moment.",
-                "Slow-drip coffee, ambient jazz playlist, and fresh flowers in a vase.",
-                "Big family/partner fry-up breakfast in pajamas talking about life."
+                "Straight up just backhand her face a few times and then grab yourself a nice meal to celebrate victory while sitting on her unconscious body.",
+                "Go home after the event and wait until your husband is sleeping. You take his phone and go into the family group chat which the annoying family member is also in. You turned on the disappearing messages function and send the text: 'We won't be going to anymore gatherings if 'annoying family member' is around because she is a fahking bitch.' You lock his phone and return it to his side then go to bed with sweet dreams.",
+                "Grab your husband and start working on getting pregnant while she watches. Make eye contact and say 'I'm only doing what you told me to.'",
+                "Hire a prostitute to seduce her husband and the next time you see her, you can say: 'You ada anak 3 pun laki you carik perempuan lain.' You meet up with the prostitute and become best friends." 
             ],
-            feedbackTitle: "☕ Morning Vibe Locked In!",
-            feedbackBody: "Weekend mornings set the tone for the whole week. Slow mornings, productive lists, or big brunches—you know how to reset!"
+            chaosPoints: [10, 20, 30, 25],
+            feedbackTitle: "Family Planning",
+            feedbackBody: "<p><video width='480' height='720' controls poster='thumbnail.jpg' align='center'><source src='https://files.catbox.moe/g3ojxm.mp4' type='video/mp4'><source src='my-video.webm' type='video/webm'></video></p><p>Would you consider adoption if you and your husband could afford it?</p>"
         },
         {
-            q: "Your partner comes home visibly upset after a brutal day at work. What do you do?",
+            q: "You and your husband love staying in to watch movies. Whenever he suggests a movie you guys watch together, you make the effort to be totally invested so you can discuss about the movie together. But whenever you suggest a movie, he sleeps throughout and you end up watching most of the movies by yourself while he's snoring at your side. What is your response?",
             a: [
                 "Create a step-by-step action plan to solve whatever problem happened.",
-                "Distract them immediately with a spontaneous night out on the town.",
                 "Run a warm bath, pour a drink, and set up a soothing space.",
-                "Sit on the floor together, listen to them vent, and take their side 100%."
+                "Sit on the floor together, listen to them vent, and take their side 100%.",
+                "Distract them immediately with a spontaneous night out on the town."
             ],
-            feedbackTitle: "❤️ Ultimate Support Unlocked!",
-            feedbackBody: "Having someone's back when they've had a rough day is the true test of a partner. Absolute rockstar behavior right here."
+            chaosPoints: [0, 5, 15, 25],
+            feedbackTitle: "❤️ Support Style Unlocked!",
+            feedbackBody: "Having someone's back when they've had a rough day is essential—whether you offer logic, cozy comfort, or tequila."
         },
         {
-            q: "Finally, pick your signature soul drink for a night out:",
+            q: "After a really long and hard day at work, you and your partner are laying in bed about to drift off to sleep. Sleep is the best time to reset your mind and body from the insanity of your job. But a sound jolts you out of your slumber. Turns out your husband is a chronic snorer and you're unable to catch a wink of sleep. You turn to him and think of a solution for the last piece of sanity you have.",
             a: [
                 "A perfectly balanced Espresso Martini or gin & tonic.",
-                "Tequila shots or whatever free drink is handed to me.",
                 "A crisp glass of natural orange wine or an Aperol Spritz.",
-                "An icy cold pint of beer or cider with my best friends."
+                "An icy cold pint of beer or cider with my best friends.",
+                "Tequila shots or whatever free drink is handed to me."
             ],
+            chaosPoints: [2, 8, 16, 25],
             feedbackTitle: "🥂 The Final Toast!",
-            feedbackBody: "Drink selected! You are officially ready to see your ultimate partner/mum/wife vibe."
+            feedbackBody: "Drink selected! You are officially ready to see your total percentage of chaos."
         }
     ];
 
@@ -216,12 +245,24 @@
         userAnswers[currentQuestionIndex] = choiceIndex;
         const q = questions[currentQuestionIndex];
         
-        // Populate custom feedback landing page
-        document.getElementById('feedback-progress').innerText = `Feedback ${currentQuestionIndex + 1} of ${questions.length}`;
-        document.getElementById('feedback-title').innerText = q.feedbackTitle;
-        document.getElementById('feedback-body').innerText = q.feedbackBody;
+        // Calculate points added and running total
+        const rawPoints = q.chaosPoints[choiceIndex];
+        const addedPercentage = Math.round((rawPoints / MAX_RAW_SCORE) * 200);
 
-        // Hide quiz screen and display feedback page
+        let runningRawSum = 0;
+        userAnswers.forEach((ans, idx) => {
+            if (ans !== undefined) runningRawSum += questions[idx].chaosPoints[ans];
+        });
+        const currentTotalPercentage = Math.round((runningRawSum / MAX_RAW_SCORE) * 200);
+
+        // Update feedback card UI
+        document.getElementById('choice-chaos').innerText = `+${addedPercentage}% Chaos Added`;
+        document.getElementById('feedback-progress').innerText = ` ${currentQuestionIndex + 1} of ${questions.length} Drama Solved`;
+        document.getElementById('feedback-title').innerText = q.feedbackTitle;
+        document.getElementById('feedback-body').innerHTML = q.feedbackBody;
+        ;
+
+        // Switch screen
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('feedback-screen').classList.remove('hidden');
     }
@@ -255,6 +296,32 @@
         document.getElementById('feedback-screen').classList.add('hidden');
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
+
+        // Calculate final chaos percentage (Max = 200%)
+        let totalRaw = userAnswers.reduce((sum, ans, idx) => sum + questions[idx].chaosPoints[ans], 0);
+        let finalChaosPercent = Math.min(200, Math.round((totalRaw / MAX_RAW_SCORE) * 200));
+
+        document.getElementById('final-score').innerText = `${finalChaosPercent}%`;
+
+        let title = "";
+        let desc = "";
+
+        if (finalChaosPercent <= 40) {
+            title = "📏 0% - 40%: The Calm Mastermind";
+            desc = "You are the anchor of sanity! Color-coded calendars, structured routines, and peaceful energy define your vibe. Chaos does not live in your house—you manage life like a total boss.";
+        } else if (finalChaosPercent <= 90) {
+            title = "✨ 41% - 90%: The Cozy Balanced Partner";
+            desc = "You have mastered the art of structured peace mixed with tasteful fun. You know when to keep things organized, but you won't lose your mind over a few unwashed dishes or a spontaneous night out.";
+        } else if (finalChaosPercent <= 150) {
+            title = "🎸 91% - 150%: The Fun Ride-or-Die";
+            desc = "High energy, zero dull moments, and maximum loyalty! Your household will be filled with laughter, spontaneous plans, and late-night snacks. You bring pure joy wherever you go.";
+        } else {
+            title = "🌪️ 151% - 200%: UNTAMED CHAOS LEGEND";
+            desc = "MAXIMUM CHAOS REACHED! Schedules have no power over you. You operate purely on vibes, tequila shots, spontaneous adventures, and living life to the absolute fullest. Cheers to the life of the party!";
+        }
+
+        document.getElementById('result-name').innerText = title;
+        document.getElementById('result-desc').innerText = desc;
     }
 
     function restartQuiz() {
