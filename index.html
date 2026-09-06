@@ -66,6 +66,9 @@
         }
         .feedback-title { font-size: 22px; color: #d63384; font-weight: bold; margin-bottom: 12px; }
         .feedback-body { font-size: 16px; line-height: 1.6; color: #4a4a4a; margin-bottom: 15px; }
+        .feedback-body p { margin-bottom: 12px; line-height: 1.6; }
+        .feedback-body p:last-child { margin-bottom: 0; }
+        .feedback-body b, .feedback-body strong { color: #d63384; }
         .chaos-badge {
             display: inline-block;
             background: #d63384;
@@ -77,10 +80,10 @@
             margin-bottom: 10px;
         }
         .score-display {
-            font-size: 48px;
+            font-size: 52px;
             font-weight: bold;
             color: #d63384;
-            margin: 15px 0;
+            margin: 15px 0 5px 0;
         }
         .result-title { font-size: 24px; color: #d63384; font-weight: bold; margin: 10px 0 15px 0; }
         .result-desc { font-size: 16px; line-height: 1.6; margin-bottom: 25px; text-align: left; background: #fff5f7; padding: 20px; border-radius: 12px; border-left: 5px solid #d63384; }
@@ -124,19 +127,18 @@
     <div id="result-screen" class="hidden">
         <h1>Your Total Chaos Score Is...</h1>
         <div class="score-display" id="final-score">0%</div>
-        <div class="result-title" id="result-name">Chaos Level Title</div>
+        <div class="result-title" id="result-name">YOU ARE CHAOTIC ASF MY QUEEN</div>
         <div class="result-desc" id="result-desc">
-            Description of final verdict based on total chaos level reached.
+            You nailed every situation perfectly and every drama was solved in the best chaotic way possible. You win the game!!! Here are more thirsty edits:
+<p><video width='480' height='720' controls poster='thumbnail.jpg' align='center'><source src='https://files.catbox.moe/g3ojxm.mp4' type='video/mp4'><source src='my-video.webm' type='video/webm'></video></p>
         </div>
         <button class="btn btn-start" onclick="restartQuiz()">Relive the drama 💩</button>
     </div>
 </div>
 
-<script>
-    // Max raw score sum possible from choices = 100 points
-    // Final chaos score is normalized so max possible = 200%
-    const MAX_RAW_SCORE = 100;
 
+<script>
+    // Direct chaos percentage points assigned per choice (No score cap)
     const questions = [
         {
             q: "Your partner text-asks 'What're you cooking for dinner?'. You know he loves your cooking but today, your day was especially shitty and you feel like you are at your breaking point. How do you respond?",
@@ -189,7 +191,7 @@
             feedbackBody: "<p><video width='480' height='720' controls poster='thumbnail.jpg' align='center'><source src='https://files.catbox.moe/jjbaar.mp4'><source src='my-video.webm' type='video/webm'></video></p><p>What are three words that you could use to describe your partner?</p>"
         },
         {
-            q: "You and your husband love staying in to watch movies. Whenever he suggests a movie you guys watch together, you make the effort to be totally invested so you can discuss about the movie together. But whenever you suggest a movie, he sleeps throughout and you end up watching most of the movies by yourself while he's snoring at your side. What is your response?",
+            q: "You and your husband love staying in to watch movies. Whenever he suggests a movie you guys watch together, you make the effort to be totally invested so you can discuss about the movie together. But whenever you suggest a movie, he sleeps throughout and you end up watching most of the movies by yourself while he's snoring away. What is your response?",
             a: [
                 "Create a step-by-step action plan to solve whatever problem happened.",
                 "Run a warm bath, pour a drink, and set up a soothing space.",
@@ -210,11 +212,10 @@
             ],
             chaosPoints: [2, 8, 16, 25],
             feedbackTitle: "🥂 The Final Toast!",
-            feedbackBody: "<p><video width='480' height='720' controls poster='thumbnail.jpg' align='center'><source src='https://files.catbox.moe/nhbg5o.mp4' type='video/mp4'><source src='my-video.webm' type='video/webm'></video></p><p>Would you consider adoption if you and your husband could afford it?</p>"
+            feedbackBody: "<p><video width='480' height='720' controls poster='thumbnail.jpg' align='center'><source src='https://files.catbox.moe/nhbg5o.mp4' type='video/mp4'><source src='my-video.webm' type='video/webm'></video></p><p>If you and your partner could choose a Bollywood movie to star in, which one would it be?</p>"
         }
     ];
-
-    let currentQuestionIndex = 0;
+	let currentQuestionIndex = 0;
     let userAnswers = [];
 
     function startQuiz() {
@@ -245,24 +246,18 @@
         userAnswers[currentQuestionIndex] = choiceIndex;
         const q = questions[currentQuestionIndex];
         
-        // Calculate points added and running total
-        const rawPoints = q.chaosPoints[choiceIndex];
-        const addedPercentage = Math.round((rawPoints / MAX_RAW_SCORE) * 200);
+        const addedPercentage = q.chaosPoints[choiceIndex];
 
-        let runningRawSum = 0;
+        let runningChaosTotal = 0;
         userAnswers.forEach((ans, idx) => {
-            if (ans !== undefined) runningRawSum += questions[idx].chaosPoints[ans];
+            if (ans !== undefined) runningChaosTotal += questions[idx].chaosPoints[ans];
         });
-        const currentTotalPercentage = Math.round((runningRawSum / MAX_RAW_SCORE) * 200);
 
-        // Update feedback card UI
         document.getElementById('choice-chaos').innerText = `+${addedPercentage}% Chaos Added`;
-        document.getElementById('feedback-progress').innerText = ` ${currentQuestionIndex + 1} of ${questions.length} Drama Solved`;
+        document.getElementById('feedback-progress').innerText = `${currentQuestionIndex + 1} of ${questions.length} Drama Solved`;
         document.getElementById('feedback-title').innerText = q.feedbackTitle;
         document.getElementById('feedback-body').innerHTML = q.feedbackBody;
-        ;
 
-        // Switch screen
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('feedback-screen').classList.remove('hidden');
     }
@@ -297,31 +292,10 @@
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
 
-        // Calculate final chaos percentage (Max = 200%)
-        let totalRaw = userAnswers.reduce((sum, ans, idx) => sum + questions[idx].chaosPoints[ans], 0);
-        let finalChaosPercent = Math.min(200, Math.round((totalRaw / MAX_RAW_SCORE) * 200));
+        // Calculates total chaos sum without any cap or upper limits
+        let finalChaosPercent = userAnswers.reduce((sum, ans, idx) => sum + questions[idx].chaosPoints[ans], 0);
 
         document.getElementById('final-score').innerText = `${finalChaosPercent}%`;
-
-        let title = "";
-        let desc = "";
-
-        if (finalChaosPercent <= 40) {
-            title = "📏 0% - 40%: The Calm Mastermind";
-            desc = "You are the anchor of sanity! Color-coded calendars, structured routines, and peaceful energy define your vibe. Chaos does not live in your house—you manage life like a total boss.";
-        } else if (finalChaosPercent <= 90) {
-            title = "✨ 41% - 90%: The Cozy Balanced Partner";
-            desc = "You have mastered the art of structured peace mixed with tasteful fun. You know when to keep things organized, but you won't lose your mind over a few unwashed dishes or a spontaneous night out.";
-        } else if (finalChaosPercent <= 150) {
-            title = "🎸 91% - 150%: The Fun Ride-or-Die";
-            desc = "High energy, zero dull moments, and maximum loyalty! Your household will be filled with laughter, spontaneous plans, and late-night snacks. You bring pure joy wherever you go.";
-        } else {
-            title = "🌪️ 151% - 200%: UNTAMED CHAOS LEGEND";
-            desc = "MAXIMUM CHAOS REACHED! Schedules have no power over you. You operate purely on vibes, tequila shots, spontaneous adventures, and living life to the absolute fullest. Cheers to the life of the party!";
-        }
-
-        document.getElementById('result-name').innerText = title;
-        document.getElementById('result-desc').innerText = desc;
     }
 
     function restartQuiz() {
@@ -333,5 +307,7 @@
     }
 </script>
 
+</body>
+</html>
 </body>
 </html>
